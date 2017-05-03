@@ -1,12 +1,12 @@
 ![sqlboiler logo](http://i.imgur.com/NJtCT7y.png)
 
-[![License](https://img.shields.io/badge/license-BSD-blue.svg)](https://github.com/vattle/sqlboiler/blob/master/LICENSE)
-[![GoDoc](https://godoc.org/github.com/vattle/sqlboiler?status.svg)](https://godoc.org/github.com/vattle/sqlboiler)
+[![License](https://img.shields.io/badge/license-BSD-blue.svg)](https://github.com/mickeyreiss/sqlboiler/blob/master/LICENSE)
+[![GoDoc](https://godoc.org/github.com/mickeyreiss/sqlboiler?status.svg)](https://godoc.org/github.com/mickeyreiss/sqlboiler)
 [![Mail](https://img.shields.io/badge/mail%20list-sqlboiler-lightgrey.svg)](https://groups.google.com/a/volatile.tech/forum/#!forum/sqlboiler)
 [![Mail-Annc](https://img.shields.io/badge/mail%20list-sqlboiler--announce-lightgrey.svg)](https://groups.google.com/a/volatile.tech/forum/#!forum/sqlboiler-announce)
 [![Slack](https://img.shields.io/badge/slack-%23general-lightgrey.svg)](https://sqlboiler.from-the.cloud)
-[![CircleCI](https://circleci.com/gh/vattle/sqlboiler.svg?style=shield)](https://circleci.com/gh/vattle/sqlboiler)
-[![Go Report Card](https://goreportcard.com/badge/vattle/sqlboiler)](http://goreportcard.com/report/vattle/sqlboiler)
+[![CircleCI](https://circleci.com/gh/mickeyreiss/sqlboiler.svg?style=shield)](https://circleci.com/gh/mickeyreiss/sqlboiler)
+[![Go Report Card](https://goreportcard.com/badge/mickeyreiss/sqlboiler)](http://goreportcard.com/report/mickeyreiss/sqlboiler)
 
 SQLBoiler is a tool to generate a Go ORM tailored to your database schema.
 
