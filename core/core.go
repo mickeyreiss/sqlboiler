@@ -5,12 +5,11 @@ package core
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"strings"
 
-	db "github.com/mickeyreiss/sqlgen/db"
+	"github.com/mickeyreiss/sqlgen/db"
 	"github.com/mickeyreiss/sqlgen/db/drivers"
 	"github.com/pkg/errors"
 )
@@ -35,27 +34,10 @@ func New(config *Config) (*State, error) {
 	}
 
 	if s.Config.TableRenderer == nil {
-		return nil, errors.New("sqlboiler config must specify a TableRenderer")
+		return nil, errors.New("config must specify a TableRenderer")
 	}
 
 	return s, nil
-}
-
-// templateData for sqlboiler templates
-type TemplateData struct {
-	Tables []db.Table
-	Table  db.Table
-
-	// Controls what names are output
-	PkgName string
-	Schema  string
-}
-type TableRenderer interface {
-	Render(config TemplateData, w io.Writer) error
-}
-
-type TableTestRenderer interface {
-	RenderTest(config TemplateData, w io.Writer) error
 }
 
 // Run executes the sqlboiler templates and outputs them to files based on the
@@ -91,38 +73,30 @@ func (s *State) Run() error {
 	//	}
 	//}
 	for _, table := range s.Tables {
-
-		data := TemplateData{
-			Tables:  s.Tables,
-			Table:   table,
-			Schema:  s.Config.Schema,
-			PkgName: s.Config.PkgName,
-		}
-
 		if table.IsJoinTable {
 			continue
 		}
 
-		if err := func(data TemplateData) error {
+		if err := func() error {
 			// Open model file.
-			w, err := s.openFile(data.Table.Name, "_gen.go")
+			w, err := s.openFile(table.Name, "_gen.go")
 			if err != nil {
 				panic(err)
 			}
 			defer w.Close()
 
 			// Generate the table templates
-			if err := s.Config.TableRenderer.Render(data, w); err != nil {
+			if err := s.Config.TableRenderer.Render(table, w); err != nil {
 				return errors.Wrap(err, "unable to generate output")
 			}
 
 			return nil
-		}(data); err != nil {
-			return err
+		}(); err != nil {
+			panic(errors.Wrapf(err, "while rendering %v", table.Name))
 		}
 
 		if testRenderer := s.Config.TableTestRenderer; !s.Config.NoTests && testRenderer != nil {
-			if err := func(data TemplateData) error {
+			if err := func() error {
 				// Open model test file.
 				w, err := s.openFile(table.Name, "_test_gen.go")
 				if err != nil {
@@ -131,12 +105,12 @@ func (s *State) Run() error {
 				defer w.Close()
 
 				// Generate the test templates
-				if err := testRenderer.RenderTest(data, w); err != nil {
+				if err := testRenderer.RenderTest(table, w); err != nil {
 					return errors.Wrap(err, "unable to generate test output")
 				}
 				return nil
-			}(data); err != nil {
-				return err
+			}(); err != nil {
+				panic(errors.Wrapf(err, "while rendering test for %v", table.Name))
 			}
 		}
 	}
